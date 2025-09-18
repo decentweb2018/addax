@@ -10,15 +10,11 @@ import { Label } from "./components/ui/label";
 import { Switch } from "./components/ui/switch";
 import { GroundPlane } from "./GroudPlane";
 import { Model } from "./Model";
-import { RooftopAwning } from "./RooftopAwning";
-import { RooftopTent } from "./RooftopTent";
 
 export type TimeOfDay = "day" | "night";
 
 function App() {
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>("day");
-  const [showTent, setShowTent] = useState(false);
-  const [showAwning, setShowAwning] = useState(false);
 
   const lighting = useMemo(() => {
     return timeOfDay === "day"
@@ -55,26 +51,10 @@ function App() {
           />
           <Label htmlFor="daynight">Ночь</Label>
         </div>
-        {/* <div className="flex items-center gap-2">
-          <Switch id="tent" checked={showTent} onCheckedChange={setShowTent} />
-          <Label htmlFor="tent">Rooftop Tent</Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Switch
-            id="awning"
-            checked={showAwning}
-            onCheckedChange={setShowAwning}
-          />
-          <Label htmlFor="awning">Rooftop Awning</Label>
-        </div> */}
       </div>
 
       <Canvas shadows>
-        <PerspectiveCamera
-          makeDefault
-          fov={40}
-          position={showTent || showAwning ? [4.2, 3.6, 5.6] : [4.5, 2, 6.8]}
-        />
+        <PerspectiveCamera makeDefault fov={40} position={[4.2, 3.6, 5.6]} />
         <ambientLight intensity={lighting.ambient} />
         <directionalLight
           position={[10, 15, 10]}
@@ -97,13 +77,8 @@ function App() {
           <GroundPlane />
         </group>
 
-        {/* <Log />
-        <Rock /> */}
-
         <Suspense fallback={null}>
           <Model />
-          {showTent && <RooftopTent />}
-          {showAwning && <RooftopAwning />}
         </Suspense>
 
         <OrbitControls
@@ -111,7 +86,7 @@ function App() {
           maxDistance={9.5}
           enablePan={false}
           maxPolarAngle={Math.PI / 2 - 0.01}
-          target={showTent || showAwning ? [0, 1.8, 0] : [0, 1.0, 0]}
+          target={[0, 1.8, 0]}
         />
       </Canvas>
     </div>

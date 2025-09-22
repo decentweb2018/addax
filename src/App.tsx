@@ -1,15 +1,11 @@
-import {
-  Environment,
-  OrbitControls,
-  PerspectiveCamera,
-  Sky,
-} from "@react-three/drei";
+import { Environment, Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo, useState } from "react";
-import { LandScapeContent } from "./LandScape";
-import { Menu } from "./Menu";
 import { Preview } from "./Preview";
-import { TrailerContent } from "./Trailer";
+import { LandScapeContent } from "./components/LandScape";
+import { Menu } from "./components/Menu";
+import { SmoothCamera } from "./components/SmoothCamera";
+import { TrailerContent } from "./components/Trailer";
 
 export type TimeOfDay = "day" | "night";
 
@@ -54,11 +50,7 @@ function App() {
       />
       <Canvas shadows>
         <Suspense fallback={<Preview />}>
-          <PerspectiveCamera
-            makeDefault
-            fov={40}
-            position={showTent || showAwning ? [4.2, 3.6, 5.6] : [4.5, 2, 6.8]}
-          />
+          <SmoothCamera showTent={showTent} showAwning={showAwning} />
 
           <ambientLight intensity={lighting.ambient} />
 
@@ -84,14 +76,6 @@ function App() {
           <LandScapeContent />
 
           <TrailerContent showAwning={showAwning} showTent={showTent} />
-
-          <OrbitControls
-            minDistance={3.5}
-            maxDistance={9.5}
-            enablePan={false}
-            maxPolarAngle={Math.PI / 2 - 0.01}
-            target={showTent || showAwning ? [0, 1.8, 0] : [0, 1.0, 0]}
-          />
         </Suspense>
       </Canvas>
     </div>

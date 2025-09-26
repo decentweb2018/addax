@@ -4,23 +4,12 @@ import { Switch } from "@/components/ui/switch";
 
 interface Props {
   timeOfDay: TimeOfDay;
-  showTent: boolean;
-  showAwning: boolean;
   onChangeTimeOfDay: (value: TimeOfDay) => void;
-  onChangeShowTent: (value: boolean) => void;
-  onChangeShowAwning: (value: boolean) => void;
 }
 
-export const Menu = ({
-  timeOfDay,
-  showTent,
-  showAwning,
-  onChangeTimeOfDay,
-  onChangeShowTent,
-  onChangeShowAwning,
-}: Props) => {
+export const Menu = ({ timeOfDay, onChangeTimeOfDay }: Props) => {
   return (
-    <div className="absolute z-10 m-4 rounded-md bg-white/80 backdrop-blur px-3 py-2 space-y-2 text-sm">
+    <div className="fixed bottom-4 left-4 z-50 rounded-md bg-white/80 backdrop-blur px-3 py-2 space-y-2 text-sm shadow-lg border border-gray-200">
       <div className="flex items-center gap-2">
         <Switch
           id="daynight"
@@ -29,23 +18,9 @@ export const Menu = ({
             onChangeTimeOfDay(value ? "night" : "day")
           }
         />
-        <Label htmlFor="daynight">Ночь</Label>
-      </div>
-      <div className="flex items-center gap-2">
-        <Switch
-          id="tent"
-          checked={showTent}
-          onCheckedChange={onChangeShowTent}
-        />
-        <Label htmlFor="tent">Rooftop Tent</Label>
-      </div>
-      <div className="flex items-center gap-2">
-        <Switch
-          id="awning"
-          checked={showAwning}
-          onCheckedChange={onChangeShowAwning}
-        />
-        <Label htmlFor="awning">Rooftop Awning</Label>
+        <Label htmlFor="daynight" className="text-gray-700 font-medium">
+          {timeOfDay === "day" ? "Day" : "Night"}
+        </Label>
       </div>
     </div>
   );

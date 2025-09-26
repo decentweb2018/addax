@@ -7,7 +7,7 @@ export const Preview = () => {
     <Html fullscreen>
       <div className="absolute inset-0 z-20 flex items-center justify-center bg-black">
         <img
-          src="/public/Preview.jpg"
+          src="/Preview.jpg"
           alt="Preview"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />

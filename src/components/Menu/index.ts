@@ -1,1 +1,2 @@
-export * from "./Menu";
+export { Menu } from "./Menu";
+export { TrailerMenu } from "./TrailerMenu";

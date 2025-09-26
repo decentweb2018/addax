@@ -1,20 +1,24 @@
 import { Suspense } from "react";
+import type { Product } from "../Menu/ProductCard";
 import { Loader } from "./Loader";
 import { RooftopAwning } from "./RooftopAwning";
 import { RooftopTent } from "./RooftopTent";
 import { Trailer } from "./Trailer";
 
 interface Props {
-  showTent: boolean;
-  showAwning: boolean;
+  selectedProducts: Set<Product>;
 }
 
-export const TrailerContent = ({ showAwning, showTent }: Props) => {
+export const TrailerContent = ({ selectedProducts }: Props) => {
+  const isShowElement = (id: string) => {
+    return Array.from(selectedProducts).some((item) => item.id === id);
+  };
+
   return (
     <Suspense fallback={<Loader />}>
       <Trailer />
-      {showAwning && <RooftopAwning />}
-      {showTent && <RooftopTent />}
+      {isShowElement("rooftop-tent") && <RooftopTent />}
+      {isShowElement("rooftop-awning") && <RooftopAwning />}
     </Suspense>
   );
 };

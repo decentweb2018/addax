@@ -1,69 +1,86 @@
-# React + TypeScript + Vite
+# 🚗 ADDAX Trailer Configurator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+3D конфигуратор прицепов ADDAX с интерактивной настройкой аксессуаров.
 
-Currently, two official plugins are available:
+## 🚀 Интеграция с Shopify
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Шаг 1: Сборка проекта
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Шаг 2: Загрузка файлов в Shopify
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Зайдите в админку Shopify:** `Online Store > Themes > Actions > Edit code`
+2. **Перейдите в папку "Assets"**
+3. **Загрузите эти файлы из папки `dist/assets/`:**
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+   - `index-CWLBNumd.css` (22 KB)
+   - `index-BxQIKEkM.js` (1.2 MB)
+
+4. **Также загрузите 3D модели из папки `dist/`:**
+   - `BaseTrailer.glb`
+   - `Ground_Plane.glb`
+   - `Log.glb`
+   - `Rock.glb`
+   - `Rooftop_Awning.glb`
+   - `Rooftop_Tent.glb`
+   - `Preview.jpg`
+   - Все папки с текстурами
+
+### Шаг 3: Создание шаблона страницы
+
+1. **В том же разделе "Edit code" перейдите в "Templates"**
+2. **Нажмите "Add a new template"**
+3. **Выберите "Page" и назовите:** `addax-configurator`
+4. **Вставьте содержимое файла:** `addax-configurator.liquid`
+
+### Шаг 4: Создание страницы
+
+1. **Перейдите в:** `Online Store > Pages`
+2. **Нажмите "Add page"**
+3. **Заполните:**
+   - **Title:** "ADDAX Configurator"
+   - **Template:** выберите `addax-configurator`
+4. **Сохраните и опубликуйте**
+
+## ⚠️ Важно
+
+- Некоторые .glb файлы могут превышать лимит Shopify (5 MB)
+- Если файлы не помещаются, разместите их на внешнем CDN
+- Обновите пути в шаблоне при необходимости
+
+## 🛠 Разработка
+
+```bash
+# Установка зависимостей
+npm install
+
+# Запуск в режиме разработки
+npm run dev
+
+# Сборка для продакшена
+npm run build
 ```
+
+## 📱 Особенности
+
+- ✅ 3D визуализация прицепа
+- ✅ Интерактивная настройка аксессуаров
+- ✅ Переключение времени дня (день/ночь)
+- ✅ Responsive дизайн
+- ✅ Интеграция с Shopify
+
+## 🔧 Планы по улучшению
+
+- [ ] Рефакторинг архитектуры согласно принципам SOLID
+- [ ] Внедрение системы сервисов
+- [ ] Добавление системы валидации
+- [ ] Оптимизация производительности
+- [ ] Добавление тестов
+- [ ] Улучшение обработки ошибок
+
+---
+
+**Готово!** 🎉 Ваш конфигуратор интегрирован в Shopify!

@@ -4,12 +4,51 @@ import { useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
-interface SmoothCameraProps {
-  showTent: boolean;
-  showAwning: boolean;
+type CameraPosition = Record<
+  string,
+  { position: [number, number, number]; lookAt: [number, number, number] }
+>;
+
+const CAMERA_POSITIONS: CameraPosition = {
+  default: { position: [4.5, 2, 6.8], lookAt: [0, 1.0, 0] },
+  "roof-top": {
+    position: [4.2, 3.6, 5.6],
+    lookAt: [0, 1.8, 0],
+  },
+  sides: { position: [6.5, 2.5, 2.0], lookAt: [0, 1.2, 0] },
+  "wheels-tires": {
+    position: [4.5, 1.2, 6.8],
+    lookAt: [0, 0.5, 0],
+  },
+  "color-decals": {
+    position: [5.5, 2.5, 4.0],
+    lookAt: [0, 1.5, 0],
+  },
+  electronics: {
+    position: [7.0, 2.0, 3.0],
+    lookAt: [0, 1.0, 0],
+  },
+  interior: {
+    position: [4.0, 3.0, 5.0],
+    lookAt: [0, 1.5, 0],
+  },
+  accessories: {
+    position: [5.0, 2.2, 5.5],
+    lookAt: [0, 1.2, 0],
+  },
+  storage: { position: [3.5, 2.5, 7.5], lookAt: [0, 1.0, 0] },
+  lighting: {
+    position: [4.2, 3.2, 5.8],
+    lookAt: [0, 1.6, 0],
+  },
+  safety: { position: [4.8, 2.3, 6.2], lookAt: [0, 1.1, 0] },
+};
+
+interface Props {
+  selectedCategory: string;
 }
 
-export function SmoothCamera({ showTent, showAwning }: SmoothCameraProps) {
+export function SmoothCamera({ selectedCategory }: Props) {
   const { camera } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const targetPosition = useRef(new THREE.Vector3(4.5, 2, 6.8));
@@ -19,21 +58,19 @@ export function SmoothCamera({ showTent, showAwning }: SmoothCameraProps) {
   useFrame((_, delta) => {
     if (!controlsRef.current) return;
 
-    // Инициализация камеры при первом рендере
     if (!isInitialized.current) {
       camera.position.set(4.5, 2, 6.8);
       controlsRef.current.target.set(0, 1.0, 0);
       isInitialized.current = true;
     }
 
-    // Обновляем целевые позиции в зависимости от состояния
-    if (showTent || showAwning) {
-      targetPosition.current.set(4.2, 3.6, 5.6);
-      targetLookAt.current.set(0, 1.8, 0);
-    } else {
-      targetPosition.current.set(4.5, 2, 6.8);
-      targetLookAt.current.set(0, 1.0, 0);
-    }
+    const cameraConfig =
+      selectedCategory && selectedCategory in CAMERA_POSITIONS
+        ? CAMERA_POSITIONS[selectedCategory]
+        : CAMERA_POSITIONS.default;
+
+    targetPosition.current.set(...cameraConfig.position);
+    targetLookAt.current.set(...cameraConfig.lookAt);
 
     // Плавное перемещение камеры
     const lerpFactor = Math.min(delta * 3, 1);
@@ -48,6 +85,7 @@ export function SmoothCamera({ showTent, showAwning }: SmoothCameraProps) {
   return (
     <>
       <PerspectiveCamera makeDefault fov={40} />
+
       <OrbitControls
         ref={controlsRef}
         minDistance={3.5}

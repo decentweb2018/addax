@@ -3,7 +3,8 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo, useState } from "react";
 import { Preview } from "./Preview";
 import { LandScapeContent } from "./components/LandScape";
-import { Menu } from "./components/Menu";
+import { Menu, TrailerMenu } from "./components/Menu";
+import type { Product } from "./components/Menu/ProductCard";
 import { SmoothCamera } from "./components/SmoothCamera";
 import { TrailerContent } from "./components/Trailer";
 
@@ -11,8 +12,31 @@ export type TimeOfDay = "day" | "night";
 
 function App() {
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>("day");
-  const [showTent, setShowTent] = useState(false);
-  const [showAwning, setShowAwning] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState<Set<Product>>(
+    new Set()
+  );
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const toggleProduct = (product: Product) => {
+    setSelectedProducts((prev) => {
+      const newSet = new Set(prev);
+      const existingProduct = Array.from(newSet).find(
+        (p) => p.id === product.id
+      );
+
+      if (existingProduct) {
+        newSet.delete(existingProduct);
+      } else {
+        newSet.add(product);
+      }
+
+      return newSet;
+    });
+  };
+
+  const selectCategory = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+  };
 
   const lighting = useMemo(() => {
     return timeOfDay === "day"
@@ -39,45 +63,45 @@ function App() {
   }, [timeOfDay]);
 
   return (
-    <div className="flex h-screen w-screen relative">
-      <Menu
-        timeOfDay={timeOfDay}
-        showTent={showTent}
-        showAwning={showAwning}
-        onChangeTimeOfDay={setTimeOfDay}
-        onChangeShowTent={setShowTent}
-        onChangeShowAwning={setShowAwning}
+    <div className="h-screen w-screen relative">
+      <Menu timeOfDay={timeOfDay} onChangeTimeOfDay={setTimeOfDay} />
+      <TrailerMenu
+        selectedProducts={selectedProducts}
+        onProductToggle={toggleProduct}
+        onCategorySelect={selectCategory}
       />
-      <Canvas shadows>
-        <Suspense fallback={<Preview />}>
-          <SmoothCamera showTent={showTent} showAwning={showAwning} />
+      <div className="h-full w-full">
+        <Canvas shadows>
+          <Suspense fallback={<Preview />}>
+            <SmoothCamera selectedCategory={selectedCategory} />
 
-          <ambientLight intensity={lighting.ambient} />
+            <ambientLight intensity={lighting.ambient} />
 
-          <directionalLight
-            position={[10, 15, 10]}
-            intensity={lighting.dir}
-            color={lighting.dirColor}
-            castShadow
-            shadow-mapSize-width={2048}
-            shadow-mapSize-height={2048}
-          />
+            <directionalLight
+              position={[10, 15, 10]}
+              intensity={lighting.dir}
+              color={lighting.dirColor}
+              castShadow
+              shadow-mapSize-width={2048}
+              shadow-mapSize-height={2048}
+            />
 
-          <Environment preset={lighting.env} />
+            <Environment preset={lighting.env} />
 
-          <Sky
-            turbidity={lighting.skyTurbidity}
-            rayleigh={lighting.skyRayleigh}
-            inclination={0.52}
-            azimuth={0.25}
-            sunPosition={lighting.sun}
-          />
+            <Sky
+              turbidity={lighting.skyTurbidity}
+              rayleigh={lighting.skyRayleigh}
+              inclination={0.52}
+              azimuth={0.25}
+              sunPosition={lighting.sun}
+            />
 
-          <LandScapeContent />
+            <LandScapeContent />
 
-          <TrailerContent showAwning={showAwning} showTent={showTent} />
-        </Suspense>
-      </Canvas>
+            <TrailerContent selectedProducts={selectedProducts} />
+          </Suspense>
+        </Canvas>
+      </div>
     </div>
   );
 }
